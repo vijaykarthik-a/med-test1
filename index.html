@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MEDIKIT</title>
+    <title>MEDIKIT - Advanced Healthcare Intelligence Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #00ff88;
             --secondary-color: #00d4ff;
             --accent-color: #667eea;
-            --danger-color: #ff4757;
-            --warning-color: #ffa502;
-            --success-color: #2ed573;
             --dark-bg: #0a0a0a;
             --darker-bg: #050505;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --card-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
             --text-secondary: #b0b0b0;
             --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            --gradient-danger: linear-gradient(135deg, #ff4757, #ff6b7a);
-            --gradient-warning: linear-gradient(135deg, #ffa502, #ffb142);
+            --gradient-accent: linear-gradient(135deg, #667eea, #764ba2);
         }
 
         * {
@@ -32,23 +28,31 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-primary);
             line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--dark-bg);
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Navigation */
+        /* Enhanced Navigation */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 18px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
             background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--card-border);
-            padding: 15px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 12px 0;
         }
 
         .nav-container {
@@ -61,19 +65,27 @@
         }
 
         .nav-logo {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 900;
             background: var(--gradient-primary);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-decoration: none;
+            letter-spacing: -1px;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.6));
         }
 
         .nav-menu {
             display: flex;
             list-style: none;
-            gap: 40px;
+            gap: 50px;
             align-items: center;
         }
 
@@ -81,399 +93,410 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            padding: 12px 24px;
+            border-radius: 50px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
-        .nav-link.active {
-            background: var(--card-bg);
-            color: var(--primary-color);
-            border: 1px solid var(--card-border);
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0);
+            z-index: -1;
         }
 
         .nav-link:hover {
             color: var(--text-primary);
+            transform: translateY(-2px);
         }
 
-        /* Dashboard Layout */
-        .dashboard {
-            margin-top: 80px;
-            padding: 40px 0;
-            min-height: calc(100vh - 80px);
+        .nav-link:hover::before {
+            opacity: 0.15;
+            transform: scale(1);
         }
 
-        .dashboard-container {
+        .nav-link.active {
+            background: var(--glass-bg);
+            color: var(--primary-color);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            background: radial-gradient(circle at 50% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                        var(--darker-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 1000px;
+            padding: 0 40px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.2s;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.4s;
+            letter-spacing: -3px;
+            line-height: 0.9;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.3));
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.8s;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+        }
+
+        .hero-stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1s;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button.primary {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .cta-button.primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 255, 136, 0.5);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 120px 0;
+            background: linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+        }
+
+        .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 40px;
         }
 
-        .dashboard-header {
-            margin-bottom: 40px;
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
         }
 
-        .dashboard-title {
-            font-size: 2.5rem;
+        .section-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
-            margin-bottom: 10px;
-            background: var(--gradient-primary);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
         }
 
-        .dashboard-subtitle {
+        .section-subtitle {
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
-        .dashboard-grid {
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
         }
 
-        /* Widget Styles */
-        .widget {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
             backdrop-filter: blur(20px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .widget::before {
+        .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
-        .widget:hover {
-            transform: translateY(-5px);
+        .feature-card:hover {
+            transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-color);
         }
 
-        .widget:hover::before {
-            opacity: 1;
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
-        .widget-header {
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 24px;
         }
 
-        .widget-title {
-            font-size: 1.1rem;
-            font-weight: 600;
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
             color: var(--text-primary);
         }
 
-        .widget-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .widget-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 10px;
-        }
-
-        .widget-description {
+        .feature-description {
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
 
-        .widget-trend {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.85rem;
-            margin-top: 10px;
-        }
-
-        .trend-up {
-            color: var(--success-color);
-        }
-
-        .trend-down {
-            color: var(--danger-color);
-        }
-
-        .trend-neutral {
-            color: var(--warning-color);
-        }
-
-        /* Specific Widget Sizes */
-        .widget-small { grid-column: span 3; }
-        .widget-medium { grid-column: span 6; }
-        .widget-large { grid-column: span 12; }
-
-        /* Status Indicators */
-        .status-critical {
-            --accent: var(--danger-color);
-            --gradient: var(--gradient-danger);
-        }
-
-        .status-warning {
-            --accent: var(--warning-color);
-            --gradient: var(--gradient-warning);
-        }
-
-        .status-normal {
-            --accent: var(--primary-color);
-            --gradient: var(--gradient-primary);
-        }
-
-        .status-critical .widget-value,
-        .status-warning .widget-value,
-        .status-normal .widget-value {
-            background: var(--gradient);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .status-critical .widget-icon,
-        .status-warning .widget-icon,
-        .status-normal .widget-icon {
-            background: var(--gradient);
-        }
-
-        /* Chart Container */
-        .chart-container {
-            height: 300px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--card-border);
-        }
-
-        .chart-placeholder {
-            color: var(--text-secondary);
-            text-align: center;
-        }
-
-        /* Activity Feed */
-        .activity-feed {
-            max-height: 400px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--card-border) transparent;
-        }
-
-        .activity-feed::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .activity-feed::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .activity-feed::-webkit-scrollbar-thumb {
-            background: var(--card-border);
-            border-radius: 2px;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .activity-content h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-
-        .activity-content p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .activity-time {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Quick Stats */
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            border: 1px solid var(--card-border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-            background: var(--gradient-primary);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Progress Bars */
-        .progress-bar {
-            background: rgba(0, 0, 0, 0.3);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 4px;
-            transition: width 1s ease;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .feature-link {
+            color: var(--primary-color);
             text-decoration: none;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s ease;
         }
 
-        .action-btn.primary {
-            background: var(--gradient-primary);
-            color: var(--text-primary);
+        .feature-link:hover {
+            gap: 12px;
         }
 
-        .action-btn.secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(8, 1fr);
-            }
-            
-            .widget-small { grid-column: span 4; }
-            .widget-medium { grid-column: span 8; }
-        }
-
+        /* Mobile Styles */
         @media (max-width: 768px) {
             .nav-container {
                 padding: 0 20px;
             }
-            
+
             .nav-menu {
-                gap: 20px;
-                font-size: 0.9rem;
+                gap: 30px;
             }
-            
-            .dashboard-container {
+
+            .hero-content {
                 padding: 0 20px;
             }
-            
-            .dashboard-grid {
+
+            .hero-stats {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
-            .widget-small,
-            .widget-medium,
-            .widget-large {
-                grid-column: span 1;
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
-            
-            .dashboard-title {
-                font-size: 2rem;
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">MEDIKIT</a>
+            <a href="#" class="nav-logo">MEDIKIT</a>
             <ul class="nav-menu">
-                <li><a href="who-integration.html" class="nav-link">Home</a></li>
-                <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
                 <li><a href="analytics.html" class="nav-link">Analytics</a></li>
                 <li><a href="integration.html" class="nav-link">WHO Integration</a></li>
                 <li><a href="about.html" class="nav-link">About</a></li>
@@ -482,216 +505,151 @@
         </div>
     </nav>
 
-    <main class="dashboard">
-        <div class="dashboard-container">
-            <div class="dashboard-header">
-                <h1 class="dashboard-title">Global Health Intelligence Dashboard</h1>
-                <p class="dashboard-subtitle">Real-time monitoring and analysis of global health threats and antimicrobial resistance patterns</p>
+    <section class="hero-section">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">✨ Next-Generation Healthcare Intelligence</div>
+            <h1 class="hero-title">
+                Advanced <span class="highlight">Healthcare</span><br>
+                Intelligence Platform
+            </h1>
+            <p class="hero-subtitle">
+                Revolutionizing global health surveillance through AI-powered outbreak detection, 
+                antimicrobial resistance tracking, and real-time epidemiological intelligence.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="outbreaks">247</div>
+                    <div class="hero-stat-label">Active Outbreaks</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="countries">194</div>
+                    <div class="hero-stat-label">Countries Monitored</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="facilities">15.7K</div>
+                    <div class="hero-stat-label">Healthcare Facilities</div>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="dashboard.html" class="cta-button primary">
+                    <span>Explore Dashboard</span>
+                    <span>→</span>
+                </a>
+                <a href="integration.html" class="cta-button secondary">
+                    <span>WHO Integration</span>
+                    <span>🌍</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">🚀 Core Capabilities</div>
+                <h2 class="section-title">Intelligent Health Surveillance</h2>
+                <p class="section-subtitle">
+                    Powered by cutting-edge AI and machine learning technologies to provide 
+                    unprecedented insights into global health patterns and emerging threats.
+                </p>
             </div>
 
-            <div class="dashboard-grid">
-                <!-- Critical Alerts Widget -->
-                <div class="widget widget-small status-critical">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Critical Alerts</h3>
-                        <div class="widget-icon">🚨</div>
-                    </div>
-                    <div class="widget-value">12</div>
-                    <div class="widget-description">Active high-priority health threats requiring immediate attention</div>
-                    <div class="widget-trend trend-up">↑ 3 from yesterday</div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🦠</div>
+                    <h3 class="feature-title">Real-time Outbreak Detection</h3>
+                    <p class="feature-description">
+                        Advanced algorithms continuously monitor global health data streams to identify 
+                        emerging outbreaks before they become widespread threats.
+                    </p>
+                    <a href="dashboard.html" class="feature-link">
+                        View Live Data <span>→</span>
+                    </a>
                 </div>
 
-                <!-- Active Outbreaks Widget -->
-                <div class="widget widget-small status-warning">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Active Outbreaks</h3>
-                        <div class="widget-icon">🦠</div>
-                    </div>
-                    <div class="widget-value">247</div>
-                    <div class="widget-description">Confirmed disease outbreaks currently being monitored worldwide</div>
-                    <div class="widget-trend trend-down">↓ 8 from last week</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧬</div>
+                    <h3 class="feature-title">AMR Intelligence</h3>
+                    <p class="feature-description">
+                        Comprehensive antimicrobial resistance tracking with predictive modeling 
+                        to anticipate resistance patterns and optimize treatment protocols.
+                    </p>
+                    <a href="analytics.html" class="feature-link">
+                        Explore Analytics <span>→</span>
+                    </a>
                 </div>
 
-                <!-- Countries Monitored Widget -->
-                <div class="widget widget-small status-normal">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Countries Monitored</h3>
-                        <div class="widget-icon">🌍</div>
-                    </div>
-                    <div class="widget-value">194</div>
-                    <div class="widget-description">WHO member states providing real-time health surveillance data</div>
-                    <div class="widget-trend trend-neutral">→ Stable coverage</div>
-                </div>
-
-                <!-- AMR Resistance Rate Widget -->
-                <div class="widget widget-small status-warning">
-                    <div class="widget-header">
-                        <h3 class="widget-title">AMR Resistance Rate</h3>
-                        <div class="widget-icon">🧬</div>
-                    </div>
-                    <div class="widget-value">28.4%</div>
-                    <div class="widget-description">Global antimicrobial resistance rate across monitored pathogens</div>
-                    <div class="widget-trend trend-up">↑ 2.1% from last month</div>
-                </div>
-
-                <!-- Global Outbreak Map Widget -->
-                <div class="widget widget-medium">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Global Outbreak Distribution</h3>
-                        <div class="widget-icon">🗺️</div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-placeholder">
-                            <h4>Interactive World Map</h4>
-                            <p>Real-time visualization of outbreak hotspots and threat levels</p>
-                            <div class="action-buttons">
-                                <button class="action-btn primary">View Full Map</button>
-                                <button class="action-btn secondary">Export Data</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Statistics Widget -->
-                <div class="widget widget-medium">
-                    <div class="widget-header">
-                        <h3 class="widget-title">System Performance</h3>
-                        <div class="widget-icon">📊</div>
-                    </div>
-                    <div class="quick-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">15.7K</div>
-                            <div class="stat-label">Healthcare Facilities</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">99.7%</div>
-                            <div class="stat-label">System Uptime</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">1,847</div>
-                            <div class="stat-label">Pathogen Detections</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity Widget -->
-                <div class="widget widget-medium">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Recent Activity Feed</h3>
-                        <div class="widget-icon">🔔</div>
-                    </div>
-                    <div class="activity-feed">
-                        <div class="activity-item">
-                            <div class="activity-icon status-critical">🚨</div>
-                            <div class="activity-content">
-                                <h4>Critical Alert: Cholera Outbreak</h4>
-                                <p>New cholera outbreak detected in Sub-Saharan Africa with 247 confirmed cases</p>
-                                <span class="activity-time">2 minutes ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon status-warning">⚠️</div>
-                            <div class="activity-content">
-                                <h4>AMR Alert: Carbapenem Resistance</h4>
-                                <p>Increased carbapenem resistance detected in Southeast Asia hospitals</p>
-                                <span class="activity-time">15 minutes ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon status-normal">✅</div>
-                            <div class="activity-content">
-                                <h4>System Update Complete</h4>
-                                <p>WHO data integration successfully updated with latest epidemiological reports</p>
-                                <span class="activity-time">1 hour ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon status-normal">📈</div>
-                            <div class="activity-content">
-                                <h4>Weekly Report Generated</h4>
-                                <p>Comprehensive surveillance report for Week 38 is now available for download</p>
-                                <span class="activity-time">3 hours ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pathogen Detection Trends Widget -->
-                <div class="widget widget-medium">
-                    <div class="widget-header">
-                        <h3 class="widget-title">Pathogen Detection Trends</h3>
-                        <div class="widget-icon">🔬</div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-placeholder">
-                            <h4>Trending Pathogens (Last 30 Days)</h4>
-                            <div style="text-align: left; margin-top: 20px;">
-                                <div style="margin-bottom: 15px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span>E. coli (ESBL)</span>
-                                        <span>34%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 34%;"></div>
-                                    </div>
-                                </div>
-                                <div style="margin-bottom: 15px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span>MRSA</span>
-                                        <span>28%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 28%;"></div>
-                                    </div>
-                                </div>
-                                <div style="margin-bottom: 15px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span>K. pneumoniae</span>
-                                        <span>21%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 21%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3 class="feature-title">Global Integration</h3>
+                    <p class="feature-description">
+                        Seamless integration with WHO Global Health Observatory and other 
+                        international health organizations for comprehensive data coverage.
+                    </p>
+                    <a href="integration.html" class="feature-link">
+                        WHO Portal <span>→</span>
+                    </a>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
     <script>
-        // Animate progress bars on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const progressBars = document.querySelectorAll('.progress-fill');
-            setTimeout(() => {
-                progressBars.forEach(bar => {
-                    const width = bar.style.width;
-                    bar.style.width = '0%';
-                    setTimeout(() => {
-                        bar.style.width = width;
-                    }, 100);
-                });
-            }, 500);
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
 
-        // Simulate real-time updates
-        function updateMetrics() {
-            const criticalAlerts = document.querySelector('.status-critical .widget-value');
-            const activeOutbreaks = document.querySelector('.status-warning .widget-value');
-            
-            // Randomly update critical alerts (simulation)
-            setInterval(() => {
-                const currentValue = parseInt(criticalAlerts.textContent);
-                const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-                const newValue = Math.max(0, currentValue + change);
-                criticalAlerts.textContent = newValue;
-            }, 30000); // Update every 30 seconds
+        // Animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particlesContainer.appendChild(particle);
+            }
         }
 
-        // Initialize real-time updates
-        updateMetrics();
+        // Animate numbers
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.hero-stat-number');
+            numbers.forEach(num => {
+                const finalValue = num.textContent;
+                const numericValue = parseFloat(finalValue.replace(/[^\d.]/g, ''));
+                const suffix = finalValue.replace(/[\d.]/g, '');
+                let currentValue = 0;
+                const increment = numericValue / 60;
+                
+                const counter = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= numericValue) {
+                        num.textContent = finalValue;
+                        clearInterval(counter);
+                    } else {
+                        num.textContent = Math.floor(currentValue) + suffix;
+                    }
+                }, 30);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setTimeout(animateNumbers, 1500);
+        });
     </script>
 </body>
 </html>
