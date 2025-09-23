@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDIKIT - Advanced Outbreak & AMR Intelligence Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        .hero-section {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1989&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            backdrop-filter: blur(2px);
+        }
+
+        .hero-content {
+            z-index: 2;
+            color: white;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.3s;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.9s;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.2s;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 18px 45px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-section {
+            min-height: 120vh;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), 
+                        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 100px 0;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+        }
+
+        .widget:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        .metric-large {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .api-section {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 100px 0;
+        }
+
+        .api-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .api-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .api-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .api-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+
+        .api-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+            background: #00ff88;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .api-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .api-metric {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .api-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .api-button {
+            background: linear-gradient(45deg, #00d4ff, #667eea);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .api-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-sidebar {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px 10px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            transform: scale(1.5);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .cta-buttons { flex-direction: column; }
+            .nav-sidebar { display: none; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-sidebar">
+        <div class="nav-dot active" data-section="0"></div>
+        <div class="nav-dot" data-section="1"></div>
+        <div class="nav-dot" data-section="2"></div>
+    </div>
+
+    <section class="hero-section section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">MEDIKIT</h1>
+            <p class="hero-subtitle">Next-Generation Outbreak Intelligence & Antimicrobial Resistance Platform</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="outbreaks">247</div>
+                    <div class="hero-stat-label">Active Outbreaks</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="countries">194</div>
+                    <div class="hero-stat-label">Countries Monitored</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="facilities">15.7K</div>
+                    <div class="hero-stat-label">Healthcare Facilities</div>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="cta-button" onclick="scrollToSection(1)">Explore Dashboard</button>
+                <a href="#" class="cta-button secondary" onclick="openWHOIntegration()">WHO Integration</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Intelligence Dashboard</h2>
+            
+            <div class="dashboard-grid">
+                <div class="widget">
+                    <div class="widget-title">Global Outbreak Status</div>
+                    <div class="metric-large" id="total-outbreaks">247</div>
+                    <p>Real-time monitoring of disease outbreaks worldwide with AI-powered threat assessment.</p>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">AMR Resistance Rates</div>
+                    <div class="metric-large">28.4%</div>
+                    <p>Advanced antimicrobial resistance tracking with predictive modeling and genomic analysis.</p>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">Pathogen Detection</div>
+                    <div class="metric-large">1,847</div>
+                    <p>Real-time pathogen identification using molecular diagnostics and machine learning algorithms.</p>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">Network Status</div>
+                    <div class="metric-large">15,743</div>
+                    <p>Connected healthcare facilities providing continuous data streams for comprehensive surveillance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section api-section">
+        <div class="container">
+            <h2 class="section-title">WHO Global Health Observatory Integration</h2>
+            
+            <div class="api-card">
+                <div class="api-header">
+                    <div class="api-logo">🌍</div>
+                    <div>
+                        <div class="api-title">WHO Global Health Observatory</div>
+                        <div class="api-status">
+                            <div class="status-dot"></div>
+                            <span>Online - Real-time data</span>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-bottom: 20px; line-height: 1.6;">Access comprehensive global health data including disease surveillance, outbreak reports, and epidemiological intelligence from 194 WHO member states.</p>
+                
+                <div class="api-metrics">
+                    <div class="api-metric">
+                        <div class="api-metric-value">194</div>
+                        <div style="font-size: 0.8rem;">Countries</div>
+                    </div>
+                    <div class="api-metric">
+                        <div class="api-metric-value">99.7%</div>
+                        <div style="font-size: 0.8rem;">Uptime</div>
+                    </div>
+                    <div class="api-metric">
+                        <div class="api-metric-value">24/7</div>
+                        <div style="font-size: 0.8rem;">Updates</div>
+                    </div>
+                </div>
+                
+                <button class="api-button" onclick="openWHOIntegration()">Access WHO Integration Portal</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function scrollToSection(index) {
+            const sections = document.querySelectorAll('.section');
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navDots = document.querySelectorAll('.nav-dot');
+            
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const threshold = window.innerHeight / 2;
+                
+                if (rect.top <= threshold && rect.bottom >= threshold) {
+                    navDots.forEach(dot => dot.classList.remove('active'));
+                    if (navDots[index]) {
+                        navDots[index].classList.add('active');
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                scrollToSection(index);
+            });
+        });
+
+        function openWHOIntegration() {
+            // This would normally open the WHO integration page
+            // For demo purposes, we'll show an alert
+            alert('Opening WHO Global Health Observatory Integration Portal...');
+            // In a real application, you would use:
+            // window.open('who-integration.html', '_blank');
+        }
+
+        // Animate numbers on page load
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.hero-stat-number, .metric-large');
+            numbers.forEach(num => {
+                const finalValue = num.textContent;
+                const numericValue = parseInt(finalValue.replace(/[^\d]/g, ''));
+                let currentValue = 0;
+                const increment = numericValue / 50;
+                
+                const counter = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= numericValue) {
+                        num.textContent = finalValue;
+                        clearInterval(counter);
+                    } else {
+                        num.textContent = Math.floor(currentValue);
+                    }
+                }, 50);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(animateNumbers, 1500);
+        });
+    </script>
+</body>
+</html>
