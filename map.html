@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Global AMR Monitoring Map</title>
+    <link rel="icon" type="image/logo" href="image/logo/logo.png" >
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,11 +10,44 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
+        :root { /* Added for the logo gradient */
+            --primary-color: #00ff88;
+            --secondary-color: #00d4ff;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
         html, body {
             height: 100%; margin: 0; padding: 0;
-            font-family: sans-serif; background-color: #f0f0f0;
+            font-family: 'Inter', sans-serif; background-color: #0a0a0a;
         }
-        #map { width: 100%; height: 100%; }
+        
+        /* --- 1. CSS FOR THE NEW HEADER --- */
+        .page-header {
+            padding: 10px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(200, 200, 200, 0.1);
+            height: 60px; /* Defined height for the header */
+            box-sizing: border-box;
+        }
+        .nav-logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            line-height: 40px; /* Aligns text vertically */
+        }
+        
+        /* --- 2. ADJUSTED MAP HEIGHT --- */
+        #map {
+            width: 100%;
+            /* Map height is now the full screen height MINUS the header's height */
+            height: calc(100vh - 60px); 
+        }
+
         .info {
             padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif;
             background: white; background: rgba(255,255,255,0.8);
@@ -25,64 +59,55 @@
             width: 18px; height: 18px; float: left;
             margin-right: 8px; opacity: 0.7;
         }
-        .leaflet-bar a.home-button {
-            background-color: #fff; color: #555; text-decoration: none;
-            font: bold 18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            text-align: center; cursor: pointer; border-bottom: 1px solid #ccc;
-            padding: 6px; display: block; line-height: 1.4;
-        }
-        .leaflet-bar a.home-button:hover { background-color: #f4f4f4; }
     </style>
 </head>
 <body>
+    <header class="page-header">
+        <a href="index.html" class="nav-logo">MEDIKIT</a>
+    </header>
+
     <div id="map"></div>
 
     <script>
-        // 1. Initialize the map
+        // Initialize the map
         var map = L.map('map').setView([20, 10], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // --- UPDATED AMR DATA SECTION ---
+        // MOCK AMR DATA
         const amrData = {
-            // Critical Risk Countries (Red)
-            "NGA": { name: "Nigeria", rate: 72 },       // Changed to a critical rate
-            "ZAF": { name: "South Africa", rate: 68 },  // Changed to a critical rate
-            "IND": { name: "India", rate: 61 },         // Changed to a critical rate
-
-            // High Risk Countries (Orange/Red-Orange)
-            "RUS": { name: "Russia", rate: 54 },
-            "CHN": { name: "China", rate: 48 },
-            "BRA": { name: "Brazil", rate: 45 },
-            "ARG": { name: "Argentina", rate: 38 },     // Changed to a warning rate
-            "ESP": { name: "Spain", rate: 35 },         // Changed to a warning rate
-
-            // Moderate & Low Risk Countries (Yellow)
-            "USA": { name: "United States", rate: 25 },
-            "DEU": { name: "Germany", rate: 22 },
-            "AUS": { name: "Australia", rate: 18 },
-            "CAN": { name: "Canada", rate: 15 },
+            "NGA": { name: "Nigeria", rate: 72 }, "ZAF": { name: "South Africa", rate: 68 },
+            "IND": { name: "India", rate: 61 }, "RUS": { name: "Russia", rate: 54 },
+            "CHN": { name: "China", rate: 48 }, "BRA": { name: "Brazil", rate: 45 },
+            "ARG": { name: "Argentina", rate: 38 }, "ESP": { name: "Spain", rate: 35 },
+            "USA": { name: "United States", rate: 25 }, "DEU": { name: "Germany", rate: 22 },
+            "AUS": { name: "Australia", rate: 18 }, "CAN": { name: "Canada", rate: 15 },
         };
-        // ------------------------------------
 
-        // 3. Define color scale
+        // Define color scale and map styles
         function getColor(rate) { return rate > 60 ? '#800026' : rate > 50 ? '#BD0026' : rate > 40 ? '#E31A1C' : rate > 30 ? '#FC4E2A' : rate > 20 ? '#FD8D3C' : rate > 10 ? '#FEB24C' : '#FFEDA0'; }
-
-        // 4. Create a style function
         function style(feature) { const countryData = amrData[feature.properties.ISO_A3]; return { fillColor: countryData ? getColor(countryData.rate) : '#dddddd', weight: 1, opacity: 1, color: 'white', dashArray: '3', fillOpacity: 0.7 }; }
 
-        // 5. Add interactivity
+        // Add interactivity
         var geojson;
         function highlightFeature(e) { var layer = e.target; layer.setStyle({ weight: 3, color: '#666', dashArray: '', fillOpacity: 0.7 }); layer.bringToFront(); }
         function resetHighlight(e) { geojson.resetStyle(e.target); }
         function onEachFeature(feature, layer) { const countryData = amrData[feature.properties.ISO_A3]; if (countryData) { layer.bindPopup(`<b>${countryData.name}</b><br>AMR Rate: ${countryData.rate}%`); } else { layer.bindPopup(`<b>${feature.properties.ADMIN}</b><br>No AMR data available.`); } layer.on({ mouseover: highlightFeature, mouseout: resetHighlight }); }
         
-        // 6. Fetch GeoJSON and add to map
+        // Fetch GeoJSON and add to map
         const geoJsonUrl = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
         fetch(geoJsonUrl).then(res => res.json()).then(data => { geojson = L.geoJSON(data, { style: style, onEachFeature: onEachFeature }).addTo(map); });
 
-        // 7. Add a legend
+        // Add a legend
         var legend = L.control({position: 'bottomright'});
-        legend.onAdd = function (map) {
+        legend.onAdd = function (map) { var div = L.DomUtil.create('div', 'info legend'), grades = [10, 20, 30, 40, 50, 60]; div.innerHTML += '<h4>AMR Rate (%)</h4>'; for (var i = 0; i < grades.length; i++) { div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+'); } return div; };
+        legend.addTo(map);
+
+        // 4. REMOVED the old home button (the emoji)
+        // The header now handles the link back to home.
+
+    </script>
+</body>
+</html>
