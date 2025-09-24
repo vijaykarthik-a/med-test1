@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics - MEDIKIT Healthcare Intelligence</title>
-    <link rel="icon" type="image/logo" href="image/logo/logo.png" >
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
@@ -301,8 +300,17 @@
         }
 
         .chart-canvas {
-            height: 350px;
+            height: 200px;
             width: 100%;
+        }
+
+        .chart-canvas.small {
+            height: 150px;
+        }
+
+        /* Single chart containers */
+        .single-chart {
+            grid-column: 1 / -1;
         }
 
         /* Alerts Section */
@@ -507,12 +515,13 @@
         <div class="nav-container">
             <a href="#" class="nav-logo">MEDIKIT</a>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
-                <li><a href="analytics.html" class="nav-link active">Analytics</a></li>
-                <li><a href="who-integration.html" class="nav-link">WHO Integration</a></li>
-                <li><a href="amr.html" class="nav-link">ARM Intelligence</a></li>
-                <li><a href="contact.html" class="nav-link">Analysis</a></li>
+                <li><a href="#" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">Dashboard</a></li>
+                <li><a href="#" class="nav-link active">Analytics</a></li>
+                <li><a href="#" class="nav-link">WHO Integration</a></li>
+                <li><a href="#" class="nav-link">AMR Intelligence</a></li>
+                <li><a href="#" class="nav-link">Analysis</a></li>
+            </ul>
         </div>
     </nav>
 
@@ -566,7 +575,7 @@
                 </div>
             </div>
 
-            <!-- Main Charts -->
+            <!-- Main Charts Row 1 -->
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
@@ -590,8 +599,27 @@
                 </div>
             </div>
 
+            <!-- Charts Row 2 -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Disease Categories</h3>
+                        <div class="chart-period">This Month</div>
+                    </div>
+                    <canvas id="diseaseChart" class="chart-canvas"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Severity Distribution</h3>
+                        <div class="chart-period">Real-time</div>
+                    </div>
+                    <canvas id="severityChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+
             <!-- AMR Analytics -->
-            <div class="chart-container" style="margin-bottom: 50px;">
+            <div class="chart-container single-chart" style="margin-bottom: 50px;">
                 <div class="chart-header">
                     <h3 class="chart-title">Antimicrobial Resistance Patterns</h3>
                     <select class="chart-period" id="amrPeriod">
@@ -601,6 +629,57 @@
                     </select>
                 </div>
                 <canvas id="amrChart" class="chart-canvas"></canvas>
+            </div>
+
+            <!-- Charts Row 3 -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Weekly Surveillance Trends</h3>
+                        <div class="chart-period">12 Weeks</div>
+                    </div>
+                    <canvas id="surveillanceChart" class="chart-canvas"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Response Time Analysis</h3>
+                        <div class="chart-period">Last 30 Days</div>
+                    </div>
+                    <canvas id="responseChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Charts Row 4 -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Monthly Case Fatality Rates</h3>
+                        <div class="chart-period">6 Months</div>
+                    </div>
+                    <canvas id="fatalityChart" class="chart-canvas"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Healthcare Resource Utilization</h3>
+                        <div class="chart-period">Current</div>
+                    </div>
+                    <canvas id="resourceChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Population Health Metrics -->
+            <div class="chart-container single-chart" style="margin-bottom: 50px;">
+                <div class="chart-header">
+                    <h3 class="chart-title">Population Health Impact Assessment</h3>
+                    <select class="chart-period">
+                        <option value="age">By Age Group</option>
+                        <option value="gender" selected>By Gender</option>
+                        <option value="comorbidity">By Comorbidity</option>
+                    </select>
+                </div>
+                <canvas id="populationChart" class="chart-canvas"></canvas>
             </div>
 
             <!-- Critical Alerts -->
@@ -755,7 +834,7 @@
         Chart.defaults.borderColor = 'rgba(200, 200, 200, 0.1)';
         Chart.defaults.backgroundColor = 'rgba(200, 200, 200, 0.05)';
 
-        // Global Outbreak Trends Chart
+        // Global Outbreak Trends Chart (Line Chart)
         const outbreakCtx = document.getElementById('outbreakChart').getContext('2d');
         new Chart(outbreakCtx, {
             type: 'line',
@@ -814,7 +893,7 @@
             }
         });
 
-        // Regional Distribution Chart
+        // Regional Distribution Chart (Doughnut Chart)
         const regionalCtx = document.getElementById('regionalChart').getContext('2d');
         new Chart(regionalCtx, {
             type: 'doughnut',
@@ -851,7 +930,92 @@
             }
         });
 
-        // AMR Patterns Chart
+        // Disease Categories Chart (Polar Area)
+        const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
+        new Chart(diseaseCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['Respiratory', 'Vector-borne', 'Waterborne', 'Foodborne', 'Zoonotic'],
+                datasets: [{
+                    data: [45, 32, 28, 24, 19],
+                    backgroundColor: [
+                        'rgba(0, 255, 136, 0.7)',
+                        'rgba(0, 212, 255, 0.7)',
+                        'rgba(102, 126, 234, 0.7)',
+                        'rgba(255, 165, 2, 0.7)',
+                        'rgba(255, 71, 87, 0.7)'
+                    ],
+                    borderColor: [
+                        '#00ff88',
+                        '#00d4ff',
+                        '#667eea',
+                        '#ffa502',
+                        '#ff4757'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Severity Distribution Chart (Pie Chart)
+        const severityCtx = document.getElementById('severityChart').getContext('2d');
+        new Chart(severityCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Critical', 'High', 'Moderate', 'Low'],
+                datasets: [{
+                    data: [23, 41, 67, 116],
+                    backgroundColor: [
+                        '#ff4757',
+                        '#ffa502',
+                        '#00d4ff',
+                        '#2ed573'
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#0a0a0a',
+                    hoverBorderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // AMR Patterns Chart (Horizontal Bar)
         const amrCtx = document.getElementById('amrChart').getContext('2d');
         new Chart(amrCtx, {
             type: 'bar',
@@ -886,4 +1050,299 @@
                         max: 100,
                         grid: {
                             color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Weekly Surveillance Trends Chart (Area Chart)
+        const surveillanceCtx = document.getElementById('surveillanceChart').getContext('2d');
+        new Chart(surveillanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'],
+                datasets: [
+                    {
+                        label: 'Confirmed Cases',
+                        data: [120, 145, 160, 180, 210, 195, 225, 240, 220, 250, 275, 290],
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Suspected Cases',
+                        data: [200, 220, 240, 260, 290, 280, 310, 330, 320, 340, 360, 380],
+                        borderColor: '#ffa502',
+                        backgroundColor: 'rgba(255, 165, 2, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Response Time Analysis Chart (Scatter Plot)
+        const responseCtx = document.getElementById('responseChart').getContext('2d');
+        new Chart(responseCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Response Time (hours)',
+                    data: [
+                        {x: 1, y: 12}, {x: 2, y: 8}, {x: 3, y: 15}, {x: 4, y: 6},
+                        {x: 5, y: 18}, {x: 6, y: 10}, {x: 7, y: 14}, {x: 8, y: 9},
+                        {x: 9, y: 11}, {x: 10, y: 16}, {x: 11, y: 7}, {x: 12, y: 13},
+                        {x: 13, y: 19}, {x: 14, y: 5}, {x: 15, y: 17}, {x: 16, y: 12}
+                    ],
+                    backgroundColor: '#00d4ff',
+                    borderColor: '#00d4ff',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Response Time (hours)'
                         },
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Days'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Monthly Case Fatality Rates Chart (Bar Chart)
+        const fatalityCtx = document.getElementById('fatalityChart').getContext('2d');
+        new Chart(fatalityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Case Fatality Rate (%)',
+                    data: [2.3, 1.8, 2.1, 1.9, 2.0, 1.7],
+                    backgroundColor: 'rgba(255, 71, 87, 0.7)',
+                    borderColor: '#ff4757',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 3,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Healthcare Resource Utilization Chart (Radar Chart)
+        const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+        new Chart(resourceCtx, {
+            type: 'radar',
+            data: {
+                labels: ['ICU Beds', 'Ventilators', 'Staff', 'PPE', 'Medications', 'Testing'],
+                datasets: [{
+                    label: 'Current Capacity %',
+                    data: [75, 82, 68, 90, 85, 78],
+                    backgroundColor: 'rgba(0, 255, 136, 0.2)',
+                    borderColor: '#00ff88',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#00ff88',
+                    pointBorderColor: '#00ff88',
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        },
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                }
+            }
+        });
+
+        // Population Health Impact Chart (Stacked Bar)
+        const populationCtx = document.getElementById('populationChart').getContext('2d');
+        new Chart(populationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['0-18', '19-35', '36-50', '51-65', '65+'],
+                datasets: [
+                    {
+                        label: 'Mild Cases',
+                        data: [45, 78, 65, 52, 38],
+                        backgroundColor: '#2ed573'
+                    },
+                    {
+                        label: 'Moderate Cases',
+                        data: [25, 35, 45, 48, 42],
+                        backgroundColor: '#00d4ff'
+                    },
+                    {
+                        label: 'Severe Cases',
+                        data: [12, 18, 25, 35, 45],
+                        backgroundColor: '#ffa502'
+                    },
+                    {
+                        label: 'Critical Cases',
+                        data: [3, 5, 8, 15, 28],
+                        backgroundColor: '#ff4757'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Search functionality for the table
+        document.getElementById('regionSearch').addEventListener('keyup', function(e) {
+            const searchValue = e.target.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#regionTable tbody tr');
+            
+            tableRows.forEach(row => {
+                const regionName = row.cells[0].textContent.toLowerCase();
+                if (regionName.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Animate stats on page load
+        function animateStats() {
+            const statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    if (stat.textContent.includes('K')) {
+                        stat.textContent = (current / 1000).toFixed(1) + 'K';
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 20);
+            });
+        }
+
+        // Initialize animations when page loads
+        window.addEventListener('load', () => {
+            setTimeout(animateStats, 500);
+        });
+    </script>
+</body>
+</html>
