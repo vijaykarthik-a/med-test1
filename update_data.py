@@ -8,7 +8,8 @@ from datetime import datetime
 # URL for the trigger endpoint on your running API server
 # When testing locally, this is correct.
 # IMPORTANT: For deployment, change this to your live Render/server URL.
-TRIGGER_URL = "http://127.0.0.1:5000/api/trigger-update"
+# In update_data.py
+TRIGGER_URL = "https://med-test1-backend.onrender.com/api/trigger-update"
 DATA_FILE = "data.json"
 
 def run_update_task():
