@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WHO Global Health Observatory - Integration Portal</title>
+    <title>WHO AMR Global Surveillance - Data Portal</title>
     <link rel="icon" type="image/logo" href="image/logo/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -799,8 +799,8 @@
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
                 <li><a href="analytics.html" class="nav-link">Analytics</a></li>
-                <li><a href="who-integration.html" class="nav-link active">WHO Integration</a></li>
-                <li><a href="amr.html" class="nav-link">AMR Intelligence</a></li>
+                <li><a href="amr.html" class="nav-link active">AMR Data</a></li>
+                <li><a href="reports.html" class="nav-link">Reports</a></li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -809,43 +809,43 @@
     <section class="hero-section">
         <div class="hero-particles" id="particles"></div>
         <div class="hero-content">
-            <div class="hero-badge">🌍 WHO Global Health Observatory</div>
+            <div class="hero-badge">🧬 WHO AMR Global Surveillance</div>
             <h1 class="hero-title">
-                <span class="highlight">WHO</span> Global<br>
-                Health Integration
+                <span class="highlight">AMR</span> Global<br>
+                Surveillance Data
             </h1>
             <p class="hero-subtitle">
-                Real-time access to global health surveillance data from 194 WHO member states. 
-                Monitor disease outbreaks, antimicrobial resistance patterns, and epidemiological intelligence.
+                Comprehensive antimicrobial resistance surveillance data from WHO's global monitoring network. 
+                Track resistance patterns, emerging threats, and epidemiological trends across 194 member states.
             </p>
             
             <div class="hero-stats">
                 <div class="hero-stat">
-                    <div class="hero-stat-number status-online" id="connection-status">Connected</div>
-                    <div class="hero-stat-label">Connection Status</div>
+                    <div class="hero-stat-number status-warning">34.2%</div>
+                    <div class="hero-stat-label">Global AMR Rate</div>
                 </div>
                 <div class="hero-stat">
-                    <div class="hero-stat-number status-info" id="data-sync">2 min ago</div>
-                    <div class="hero-stat-label">Last Sync</div>
+                    <div class="hero-stat-number status-online">142K</div>
+                    <div class="hero-stat-label">Lab Reports</div>
                 </div>
                 <div class="hero-stat">
-                    <div class="hero-stat-number status-online" id="uptime">99.7%</div>
-                    <div class="hero-stat-label">API Uptime</div>
+                    <div class="hero-stat-number status-info">194</div>
+                    <div class="hero-stat-label">Countries</div>
                 </div>
                 <div class="hero-stat">
-                    <div class="hero-stat-number status-warning" id="rate-limit">847/1000</div>
-                    <div class="hero-stat-label">API Calls Remaining</div>
+                    <div class="hero-stat-number status-error">↑ 12%</div>
+                    <div class="hero-stat-label">Yearly Increase</div>
                 </div>
             </div>
             
             <div class="cta-buttons">
-                <button class="cta-button primary" onclick="syncData()" id="sync-btn">
-                    <span>Sync Data Now</span>
-                    <span>🔄</span>
+                <button class="cta-button primary" onclick="loadLatestData()" id="load-btn">
+                    <span>Load Latest Data</span>
+                    <span>📊</span>
                 </button>
-                <button class="cta-button secondary" onclick="testConnection()" id="test-btn">
-                    <span>Test Connection</span>
-                    <span>🔗</span>
+                <button class="cta-button secondary" onclick="downloadReport()" id="download-btn">
+                    <span>Download Report</span>
+                    <span>📋</span>
                 </button>
             </div>
         </div>
@@ -854,50 +854,56 @@
     <section class="features-section">
         <div class="container">
             <div class="section-header">
-                <div class="section-badge">📊 Live Data Streams</div>
-                <h2 class="section-title">Global Health Intelligence</h2>
+                <div class="section-badge">🦠 AMR Intelligence</div>
+                <h2 class="section-title">Resistance Surveillance</h2>
                 <p class="section-subtitle">
-                    Real-time surveillance data and analytics from WHO's global health monitoring network, 
-                    providing critical insights for outbreak detection and response.
+                    Real-time antimicrobial resistance data and analytics from WHO's global surveillance network, 
+                    providing critical insights for AMR prevention and control strategies.
                 </p>
             </div>
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🦠</div>
-                    <h3 class="feature-title">Recent Outbreak Data</h3>
+                    <div class="feature-icon">🧬</div>
+                    <h3 class="feature-title">Priority Pathogens</h3>
                     <p class="feature-description">
-                        Latest outbreak intelligence from WHO member states with real-time case updates and risk assessments.
+                        Critical antimicrobial-resistant bacteria classified by WHO as priority pathogens for R&D of new antibiotics.
                     </p>
-                    <div class="loading-spinner" id="outbreak-spinner"></div>
+                    <div class="loading-spinner" id="pathogen-spinner"></div>
                     <div class="table-wrapper">
-                        <table class="data-table" id="outbreak-table">
+                        <table class="data-table" id="pathogen-table">
                             <thead>
                                 <tr>
-                                    <th>Country</th>
-                                    <th>Disease</th>
-                                    <th>Cases</th>
-                                    <th>Status</th>
+                                    <th>Pathogen</th>
+                                    <th>Priority</th>
+                                    <th>Resistance %</th>
+                                    <th>Trend</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>India</td>
-                                    <td>Dengue</td>
-                                    <td>1,247</td>
-                                    <td style="color: #ffa726;">High</td>
-                                </tr>
-                                <tr>
-                                    <td>Brazil</td>
-                                    <td>Zika</td>
-                                    <td>89</td>
-                                    <td style="color: #42a5f5;">Moderate</td>
-                                </tr>
-                                <tr>
-                                    <td>Nigeria</td>
-                                    <td>Meningitis</td>
-                                    <td>456</td>
+                                    <td>A. baumannii</td>
                                     <td style="color: #ff6b6b;">Critical</td>
+                                    <td>68.4%</td>
+                                    <td style="color: #ff6b6b;">↑ 5.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>P. aeruginosa</td>
+                                    <td style="color: #ff6b6b;">Critical</td>
+                                    <td>41.7%</td>
+                                    <td style="color: #ff6b6b;">↑ 3.1%</td>
+                                </tr>
+                                <tr>
+                                    <td>Enterobacteriaceae</td>
+                                    <td style="color: #ff6b6b;">Critical</td>
+                                    <td>34.2%</td>
+                                    <td style="color: #ffa726;">↑ 2.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>S. aureus (MRSA)</td>
+                                    <td style="color: #ffa726;">High</td>
+                                    <td>28.1%</td>
+                                    <td style="color: #00ff88;">↓ 1.2%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -905,10 +911,413 @@
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🧬</div>
-                    <h3 class="feature-title">AMR Surveillance Data</h3>
+                    <div class="feature-icon">🌍</div>
+                    <h3 class="feature-title">Regional AMR Distribution</h3>
                     <p class="feature-description">
-                        Antimicrobial resistance tracking with predictive modeling and resistance pattern analysis.
+                        Antimicrobial resistance patterns across WHO regions showing geographic distribution and hotspots.
                     </p>
-                    <div class="loading-spinner" id="amr-spinner"></div>
+                    <div class="loading-spinner" id="regional-spinner"></div>
                     <div class="chart-container">
+                        <div class="chart-placeholder"></div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="regional-table">
+                            <thead>
+                                <tr>
+                                    <th>WHO Region</th>
+                                    <th>AMR Rate</th>
+                                    <th>Risk Level</th>
+                                    <th>Countries</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>South-East Asia</td>
+                                    <td>42.8%</td>
+                                    <td style="color: #ff6b6b;">High</td>
+                                    <td>11</td>
+                                </tr>
+                                <tr>
+                                    <td>Eastern Mediterranean</td>
+                                    <td>38.6%</td>
+                                    <td style="color: #ff6b6b;">High</td>
+                                    <td>21</td>
+                                </tr>
+                                <tr>
+                                    <td>Western Pacific</td>
+                                    <td>35.2%</td>
+                                    <td style="color: #ffa726;">Moderate</td>
+                                    <td>27</td>
+                                </tr>
+                                <tr>
+                                    <td>Africa</td>
+                                    <td>31.4%</td>
+                                    <td style="color: #ffa726;">Moderate</td>
+                                    <td>47</td>
+                                </tr>
+                                <tr>
+                                    <td>Americas</td>
+                                    <td>24.7%</td>
+                                    <td style="color: #42a5f5;">Low</td>
+                                    <td>35</td>
+                                </tr>
+                                <tr>
+                                    <td>Europe</td>
+                                    <td>18.9%</td>
+                                    <td style="color: #00ff88;">Very Low</td>
+                                    <td>53</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h3 class="feature-title">Antibiotic Resistance Trends</h3>
+                    <p class="feature-description">
+                        Time-series analysis of resistance patterns for key antibiotics showing emergence and spread of resistance.
+                    </p>
+                    <div class="loading-spinner" id="antibiotic-spinner"></div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder"></div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="antibiotic-table">
+                            <thead>
+                                <tr>
+                                    <th>Antibiotic Class</th>
+                                    <th>2023 Rate</th>
+                                    <th>2022 Rate</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Carbapenems</td>
+                                    <td>41.2%</td>
+                                    <td>38.7%</td>
+                                    <td style="color: #ff6b6b;">↑ 2.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>3rd Gen Cephalosporins</td>
+                                    <td>36.8%</td>
+                                    <td>35.1%</td>
+                                    <td style="color: #ffa726;">↑ 1.7%</td>
+                                </tr>
+                                <tr>
+                                    <td>Fluoroquinolones</td>
+                                    <td>33.4%</td>
+                                    <td>34.9%</td>
+                                    <td style="color: #00ff88;">↓ 1.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>Methicillin (MRSA)</td>
+                                    <td>28.1%</td>
+                                    <td>29.3%</td>
+                                    <td style="color: #00ff88;">↓ 1.2%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">Surveillance Quality Metrics</h3>
+                    <p class="feature-description">
+                        Data quality indicators and surveillance system performance metrics ensuring reliable AMR intelligence.
+                    </p>
+                    <div class="loading-spinner" id="quality-spinner"></div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="quality-table">
+                            <thead>
+                                <tr>
+                                    <th>Quality Metric</th>
+                                    <th>Current Value</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Data Completeness</td>
+                                    <td>94.8%</td>
+                                    <td>≥90%</td>
+                                    <td style="color: #00ff88;">Excellent</td>
+                                </tr>
+                                <tr>
+                                    <td>Lab Coverage</td>
+                                    <td>78.2%</td>
+                                    <td>≥75%</td>
+                                    <td style="color: #00ff88;">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Reporting Timeliness</td>
+                                    <td>67.4%</td>
+                                    <td>≥80%</td>
+                                    <td style="color: #ffa726;">Needs Improvement</td>
+                                </tr>
+                                <tr>
+                                    <td>Data Accuracy</td>
+                                    <td>91.6%</td>
+                                    <td>≥95%</td>
+                                    <td style="color: #ffa726;">Fair</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3 class="feature-title">Laboratory Network Data</h3>
+                    <p class="feature-description">
+                        AMR surveillance laboratory network performance and contribution to global resistance monitoring.
+                    </p>
+                    <div class="loading-spinner" id="lab-spinner"></div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="lab-table">
+                            <thead>
+                                <tr>
+                                    <th>Laboratory Type</th>
+                                    <th>Count</th>
+                                    <th>Samples/Month</th>
+                                    <th>Participation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>National Reference Labs</td>
+                                    <td>194</td>
+                                    <td>45,672</td>
+                                    <td style="color: #00ff88;">100%</td>
+                                </tr>
+                                <tr>
+                                    <td>Regional Labs</td>
+                                    <td>1,247</td>
+                                    <td>189,343</td>
+                                    <td style="color: #00ff88;">87%</td>
+                                </tr>
+                                <tr>
+                                    <td>Hospital Labs</td>
+                                    <td>8,951</td>
+                                    <td>567,891</td>
+                                    <td style="color: #ffa726;">72%</td>
+                                </tr>
+                                <tr>
+                                    <td>Private Labs</td>
+                                    <td>3,428</td>
+                                    <td>234,567</td>
+                                    <td style="color: #42a5f5;">45%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚨</div>
+                    <h3 class="feature-title">Alert System & Hotspots</h3>
+                    <p class="feature-description">
+                        Real-time AMR alerts and emerging resistance hotspots requiring immediate attention and response.
+                    </p>
+                    <div class="loading-spinner" id="alert-spinner"></div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="alert-table">
+                            <thead>
+                                <tr>
+                                    <th>Alert Type</th>
+                                    <th>Location</th>
+                                    <th>Severity</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Novel Resistance Gene</td>
+                                    <td>Mumbai, India</td>
+                                    <td style="color: #ff6b6b;">Critical</td>
+                                    <td>2024-09-20</td>
+                                </tr>
+                                <tr>
+                                    <td>Outbreak Cluster</td>
+                                    <td>São Paulo, Brazil</td>
+                                    <td style="color: #ff6b6b;">High</td>
+                                    <td>2024-09-18</td>
+                                </tr>
+                                <tr>
+                                    <td>Resistance Spike</td>
+                                    <td>Lagos, Nigeria</td>
+                                    <td style="color: #ffa726;">Medium</td>
+                                    <td>2024-09-15</td>
+                                </tr>
+                                <tr>
+                                    <td>Cross-Resistance</td>
+                                    <td>Bangkok, Thailand</td>
+                                    <td style="color: #ffa726;">Medium</td>
+                                    <td>2024-09-12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navigation functionality
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const navbar = document.getElementById('navbar');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Scroll effect for navbar
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Button functionality
+        function loadLatestData() {
+            const loadBtn = document.getElementById('load-btn');
+            const originalText = loadBtn.innerHTML;
+            
+            loadBtn.innerHTML = '<span>Loading...</span><span>⏳</span>';
+            loadBtn.disabled = true;
+            
+            // Show loading spinners
+            document.querySelectorAll('.loading-spinner').forEach(spinner => {
+                spinner.style.display = 'block';
+            });
+            
+            setTimeout(() => {
+                document.querySelectorAll('.loading-spinner').forEach(spinner => {
+                    spinner.style.display = 'none';
+                });
+                
+                loadBtn.innerHTML = originalText;
+                loadBtn.disabled = false;
+                
+                showNotification('Latest AMR data loaded successfully!', 'success');
+                
+                // Update some stats to show data refresh
+                document.getElementById('connection-status').textContent = 'Updated';
+                document.getElementById('data-sync').textContent = 'Just now';
+            }, 3000);
+        }
+
+        function downloadReport() {
+            const downloadBtn = document.getElementById('download-btn');
+            const originalText = downloadBtn.innerHTML;
+            
+            downloadBtn.innerHTML = '<span>Preparing...</span><span>📄</span>';
+            downloadBtn.disabled = true;
+            
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.disabled = false;
+                showNotification('AMR surveillance report downloaded!', 'success');
+            }, 2000);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 4000);
+        }
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.hero-stat, .feature-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Auto-update stats simulation
+        function updateStats() {
+            const stats = {
+                'Global AMR Rate': () => (34.2 + (Math.random() - 0.5) * 0.2).toFixed(1) + '%',
+                'Lab Reports': () => (142 + Math.floor(Math.random() * 10)) + 'K',
+                'Yearly Increase': () => '↑ ' + (12 + (Math.random() - 0.5) * 2).toFixed(0) + '%'
+            };
+
+            Object.entries(stats).forEach(([label, generator]) => {
+                const elements = document.querySelectorAll('.hero-stat-label');
+                elements.forEach(el => {
+                    if (el.textContent === label) {
+                        const numberEl = el.previousElementSibling;
+                        if (numberEl) {
+                            numberEl.textContent = generator();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Update stats every 30 seconds
+        setInterval(updateStats, 30000);
+
+        // Initial load message
+        setTimeout(() => {
+            showNotification('AMR surveillance data initialized', 'success');
+        }, 2000);
+    </script>
+</body>
+</html>
