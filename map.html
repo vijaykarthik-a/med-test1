@@ -1,176 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Global AMR Monitoring Map</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
+    <title>Dashboard - MEDIKIT</title>
+    <link rel="icon" type="image/logo" href="image/logo/logo.png" >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-            background-color: #f0f0f0;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        .info {
-            padding: 6px 8px;
-            font: 14px/16px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
-        }
-        .info h4 {
-            margin: 0 0 5px;
-            color: #777;
-        }
-        .legend {
-            line-height: 18px;
-            color: #555;
-        }
-        .legend i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-        }
-    </style>
-</head>
-<body>
-    <div id="map"></div>
-
-    <script>
-        // 1. Initialize the map
-        var map = L.map('map').setView([20, 10], 2);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        // 2. MOCK AMR DATA 🧪
-        // In a real application, you would fetch this data from an API or a database.
-        // Data structure: { country_iso_a3_code: { country_name, resistance_rate } }
-        const amrData = {
-            "IND": { name: "India", rate: 57 },
-            "USA": { name: "United States", rate: 25 },
-            "BRA": { name: "Brazil", rate: 45 },
-            "NGA": { name: "Nigeria", rate: 65 },
-            "RUS": { name: "Russia", rate: 51 },
-            "CHN": { name: "China", rate: 48 },
-            "CAN": { name: "Canada", rate: 15 },
-            "AUS": { name: "Australia", rate: 18 },
-            "ZAF": { name: "South Africa", rate: 62 },
-            "ARG": { name: "Argentina", rate: 40 },
-            "ESP": { name: "Spain", rate: 35 },
-            "DEU": { name: "Germany", rate: 22 },
-        };
-
-        // 3. Define color scale based on resistance rate
-        function getColor(rate) {
-            return rate > 60 ? '#800026' : // Very High
-                   rate > 50 ? '#BD0026' : // High
-                   rate > 40 ? '#E31A1C' : // Moderately High
-                   rate > 30 ? '#FC4E2A' : // Moderate
-                   rate > 20 ? '#FD8D3C' : // Low
-                   rate > 10 ? '#FEB24C' : // Very Low
-                               '#FFEDA0';  // Minimal
-        }
-
-        // 4. Create a style function for the GeoJSON layer
-        function style(feature) {
-            const countryCode = feature.properties.ISO_A3;
-            const countryData = amrData[countryCode];
-            const rate = countryData ? countryData.rate : null;
-
-            return {
-                fillColor: rate ? getColor(rate) : '#dddddd', // Gray for no data
-                weight: 1,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-
-        // 5. Add interactivity (hover effects)
-        var geojson; // Make geojson layer accessible for events
-
-        function highlightFeature(e) {
-            var layer = e.target;
-            layer.setStyle({
-                weight: 3,
-                color: '#666',
-                dashArray: '',
-                fillOpacity: 0.7
-            });
-            layer.bringToFront();
-        }
-
-        function resetHighlight(e) {
-            geojson.resetStyle(e.target);
-        }
-
-        function onEachFeature(feature, layer) {
-            const countryCode = feature.properties.ISO_A3;
-            const countryData = amrData[countryCode];
-
-            // Add a popup with the data
-            if (countryData) {
-                layer.bindPopup(`<b>${countryData.name}</b><br>AMR Rate: ${countryData.rate}%`);
-            } else {
-                layer.bindPopup(`<b>${feature.properties.ADMIN}</b><br>No AMR data available.`);
-            }
-
-            // Add event listeners
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-            });
+          :root {
+            --primary-color: #00ff88;
+            --secondary-color: #00d4ff;
+            --accent-color: #667eea;
+            --danger-color: #ff4757;
+            --warning-color: #ffa502;
+            --success-color: #2ed573;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --glass-bg: rgba(200, 200, 200, 0.05);
+            --glass-border: rgba(200, 200, 200, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, #667eea, #764ba2);
+            --gradient-danger: linear-gradient(135deg, #ff4757, #ff6b7a);
+            --gradient-warning: linear-gradient(135deg, #ffa502, #ffb142);
         }
         
-        // 6. Fetch GeoJSON country boundaries and add to map
-        // This URL points to a file with world country shapes
-        const geoJsonUrl = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        fetch(geoJsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                geojson = L.geoJSON(data, {
-                    style: style,
-                    onEachFeature: onEachFeature
-                }).addTo(map);
-            });
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-        // 7. Add a legend to the map 📊
-        var legend = L.control({position: 'bottomright'});
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend'),
-                grades = [10, 20, 30, 40, 50, 60], // The breaks for our color scale
-                labels = [];
+        .navbar.scrolled {
+            background: rgba(5, 5, 5, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 10px 0;
+        }
 
-            div.innerHTML += '<h4>AMR Rate (%)</h4>';
-            // Loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
-            return div;
-        };
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        legend.addTo(map);
+        .nav-logo {
+            font-size: 28px; /* Fixed size instead of clamp */
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+            transition: all 0.3s ease;
+        }
 
-    </script>
-</body>
-</html>
+        .nav-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.6));
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px; /* Fixed size */
+            padding: 8px 16px;
+            border-radius: 50px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0);
+            z-index: -1;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link:hover::before {
+            opacity: 0.15;
+            transform: scale(1);
+        }
+
+        .nav-link.active {
+            background: var(--glass-bg);
+            color: var(--primary-color);
+            border: 1px solid var(--glass-border);
+        }/* Dashboard Layout */
+        .dashboard {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
