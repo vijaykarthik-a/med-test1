@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My World Map</title>
+    <meta charset="utf-g" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <style>
+        /* The map container must have a defined height */
+        #map { 
+            height: 600px; 
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Interactive World Map 🗺️</h1>
+
+    <div id="map"></div>
+
+    <script>
+        // 5. Initialize the map and set its view
+        // The first argument 'map' is the id of our div from step 4.
+        // setView([latitude, longitude], zoomLevel)
+        // A low zoom level (like 2) shows more of the world.
+        var map = L.map('map').setView([20, 0], 2);
+
+        // 6. Add the map's background tiles
+        // We're using OpenStreetMap tiles. It's free!
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            // This attribution is required by OpenStreetMap's license.
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // 7. (Optional) Add a marker to the map
+        // Let's add a marker for Chennai, India!
+        var marker = L.marker([13.0827, 80.2707]).addTo(map);
+
+        // 8. (Optional) Add a popup to the marker
+        marker.bindPopup("<b>Hello from Chennai!</b><br>This is a popup.").openPopup();
+    </script>
+
+</body>
+</html>
