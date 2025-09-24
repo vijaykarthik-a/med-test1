@@ -692,6 +692,16 @@
                 </div>
             </div>
 
+            <div class="chart-container single-chart" style="margin-bottom: 50px;">
+                <div class="chart-header">
+                    <h3 class="chart-title">Tamil Nadu AMR Trends (2022-2024)</h3>
+                    <div class="chart-period">Source: ICMR-TN</div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="tamilNaduChart"></canvas>
+                </div>
+            </div>
+
             <div class="alerts-section">
                 <h2 class="section-title">🚨 Critical Health Alerts</h2>
                 <div class="alerts-grid">
@@ -1045,6 +1055,7 @@
                 }]
             },
             options: {
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
@@ -1053,14 +1064,14 @@
                     }
                 },
                 scales: {
-                    y: {
+                    x: {
                         beginAtZero: true,
                         max: 100,
                         grid: {
                             color: 'rgba(200, 200, 200, 0.1)'
                         }
                     },
-                    x: {
+                    y: {
                         grid: {
                             display: false
                         }
@@ -1309,6 +1320,99 @@
                 }
             }
         });
+        
+        // Tamil Nadu AMR Intelligence Chart
+        const tnData = {
+            "yearly_intelligence": {
+                "2022": { "resistance_intelligence": { "fluoroquinolones": {"resistance_rate": 83.3}, "beta_lactams": {"resistance_rate": 66.7}, "carbapenems": {"resistance_rate": 66.7}, "glycopeptides": {"resistance_rate": 0.0} } },
+                "2023": { "resistance_intelligence": { "fluoroquinolones": {"resistance_rate": 87.5}, "beta_lactams": {"resistance_rate": 68.8}, "carbapenems": {"resistance_rate": 71.4}, "glycopeptides": {"resistance_rate": 0.0} } },
+                "2024": { "resistance_intelligence": { "fluoroquinolones": {"resistance_rate": 94.1}, "beta_lactams": {"resistance_rate": 76.5}, "carbapenems": {"resistance_rate": 69.2}, "glycopeptides": {"resistance_rate": 12.5} } }
+            }
+        };
+
+        const years = Object.keys(tnData.yearly_intelligence);
+        const fluoroquinolonesData = years.map(year => tnData.yearly_intelligence[year].resistance_intelligence.fluoroquinolones.resistance_rate);
+        const betaLactamsData = years.map(year => tnData.yearly_intelligence[year].resistance_intelligence.beta_lactams.resistance_rate);
+        const carbapenemsData = years.map(year => tnData.yearly_intelligence[year].resistance_intelligence.carbapenems.resistance_rate);
+        const glycopeptidesData = years.map(year => tnData.yearly_intelligence[year].resistance_intelligence.glycopeptides.resistance_rate);
+
+        const tamilNaduCtx = document.getElementById('tamilNaduChart').getContext('2d');
+        new Chart(tamilNaduCtx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: 'Fluoroquinolones',
+                        data: fluoroquinolonesData,
+                        borderColor: '#ff4757',
+                        backgroundColor: 'rgba(255, 71, 87, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Beta-lactams',
+                        data: betaLactamsData,
+                        borderColor: '#ffa502',
+                        backgroundColor: 'rgba(255, 165, 2, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Carbapenems',
+                        data: carbapenemsData,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Glycopeptides',
+                        data: glycopeptidesData,
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Resistance Rate (%)'
+                        },
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.1)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
 
         // Search functionality for the table
         document.getElementById('regionSearch').addEventListener('keyup', function(e) {
