@@ -1,8 +1,7 @@
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
     // ⬇️ IMPORTANT: REPLACE THIS URL WITH YOUR LIVE BACKEND URL FROM RENDER OR RAILWAY ⬇️
-    const SOCKET_URL = 'https://med-test1-backend.onrender.com'; // Example URL
-
+const SOCKET_URL = 'https://powerful-reprieve-production.up.railway.app';
     // --- Main function to update the UI with new data ---
     function updateDashboard(data) {
         // Update the main statistic widgets
