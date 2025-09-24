@@ -1,0 +1,7 @@
+# requirements.txt
+
+Flask
+Flask-SocketIO
+Flask-Cors
+eventlet
+requests
