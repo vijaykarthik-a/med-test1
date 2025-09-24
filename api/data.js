@@ -1,0 +1,78 @@
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+    // ⬇️ IMPORTANT: REPLACE THIS URL WITH YOUR LIVE BACKEND URL FROM RENDER OR RAILWAY ⬇️
+const SOCKET_URL = 'https://powerful-reprieve-production.up.railway.app';
+    // --- Main function to update the UI with new data ---
+    function updateDashboard(data) {
+        // Update the main statistic widgets
+        const criticalAlertsEl = document.querySelector('.widget.status-critical .widget-value');
+        const activeOutbreaksEl = document.querySelectorAll('.widget.status-warning .widget-value')[0]; // The first warning widget
+        
+        // Update the "Quick Statistics" widget
+        const facilitiesEl = document.querySelector('.quick-stats .stat-item:nth-child(1) .stat-number');
+        const pathogenDetectionsEl = document.querySelector('.quick-stats .stat-item:nth-child(3) .stat-number');
+        
+        // Update the "Recent Activity Feed"
+        const activityFeedEl = document.querySelector('.activity-feed');
+
+        // Check if elements exist before updating
+        if (criticalAlertsEl) {
+            criticalAlertsEl.textContent = data.critical_health_alerts.length;
+        }
+        if (activeOutbreaksEl) {
+            activeOutbreaksEl.textContent = data.active_global_outbreaks.toLocaleString();
+        }
+        if (facilitiesEl) {
+            // Format number to show "K" for thousands, like in your design
+            facilitiesEl.textContent = (data.reporting_facilities_count / 1000).toFixed(1) + 'K';
+        }
+        if (pathogenDetectionsEl) {
+            // Mapping AMR cases to "Pathogen Detections" for this widget
+            pathogenDetectionsEl.textContent = data.amr_cases_this_month.toLocaleString();
+        }
+
+        // --- Dynamically build the Activity Feed ---
+        if (activityFeedEl) {
+            // Clear the old activity feed
+            activityFeedEl.innerHTML = '';
+            
+            // Create a new entry for each alert
+            data.critical_health_alerts.forEach(alertItem => {
+                const itemHTML = `
+                    <div class="activity-item">
+                        <div class="activity-icon status-warning">⚠️</div>
+                        <div class="activity-content">
+                            <h4>Critical Health Alert</h4>
+                            <p>${alertItem.alert}</p>
+                            <span class="activity-time">${data.last_updated}</span>
+                        </div>
+                    </div>
+                `;
+                // Add the new item to the feed
+                activityFeedEl.insertAdjacentHTML('beforeend', itemHTML);
+            });
+        }
+    }
+
+    // --- Socket.IO Connection Logic ---
+    const socket = io(SOCKET_URL);
+
+    // This runs when the connection is successful
+    socket.on('connect', () => {
+        console.log('Successfully connected to the real-time server!');
+    });
+
+    // This is the most important part: it listens for 'update_data' events from the server
+    socket.on('update_data', (data) => {
+        console.log('New data received from server:', data);
+        if (data && !data.error) {
+            updateDashboard(data);
+        }
+    });
+
+    // You can also listen for disconnection events
+    socket.on('disconnect', () => {
+        console.log('Disconnected from the real-time server.');
+    });
+
+</script>
