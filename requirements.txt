@@ -1,5 +1,5 @@
 # requirements.txt
-
+gunicorn
 Flask
 Flask-SocketIO
 Flask-Cors
