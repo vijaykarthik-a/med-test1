@@ -299,13 +299,10 @@
             color: var(--primary-color);
         }
 
-        .chart-canvas {
-            height: 200px;
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
             width: 100%;
-        }
-
-        .chart-canvas.small {
-            height: 15px;
         }
 
         /* Single chart containers */
@@ -536,7 +533,6 @@
                 </p>
             </div>
 
-            <!-- Key Metrics -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-header">
@@ -575,7 +571,6 @@
                 </div>
             </div>
 
-            <!-- Main Charts Row 1 -->
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
@@ -587,7 +582,9 @@
                             <option value="1y">Last Year</option>
                         </select>
                     </div>
-                    <canvas id="outbreakChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="outbreakChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="chart-container">
@@ -595,18 +592,21 @@
                         <h3 class="chart-title">Regional Distribution</h3>
                         <div class="chart-period">Current</div>
                     </div>
-                    <canvas id="regionalChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="regionalChart"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- Charts Row 2 -->
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
                         <h3 class="chart-title">Disease Categories</h3>
                         <div class="chart-period">This Month</div>
                     </div>
-                    <canvas id="diseaseChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="diseaseChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="chart-container">
@@ -614,11 +614,12 @@
                         <h3 class="chart-title">Severity Distribution</h3>
                         <div class="chart-period">Real-time</div>
                     </div>
-                    <canvas id="severityChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="severityChart"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- AMR Analytics -->
             <div class="chart-container single-chart" style="margin-bottom: 50px;">
                 <div class="chart-header">
                     <h3 class="chart-title">Antimicrobial Resistance Patterns</h3>
@@ -628,17 +629,20 @@
                         <option value="region">By Region</option>
                     </select>
                 </div>
-                <canvas id="amrChart" class="chart-canvas"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="amrChart"></canvas>
+                </div>
             </div>
 
-            <!-- Charts Row 3 -->
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
                         <h3 class="chart-title">Weekly Surveillance Trends</h3>
                         <div class="chart-period">12 Weeks</div>
                     </div>
-                    <canvas id="surveillanceChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="surveillanceChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="chart-container">
@@ -646,18 +650,21 @@
                         <h3 class="chart-title">Response Time Analysis</h3>
                         <div class="chart-period">Last 30 Days</div>
                     </div>
-                    <canvas id="responseChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="responseChart"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- Charts Row 4 -->
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
                         <h3 class="chart-title">Monthly Case Fatality Rates</h3>
                         <div class="chart-period">6 Months</div>
                     </div>
-                    <canvas id="fatalityChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="fatalityChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="chart-container">
@@ -665,11 +672,12 @@
                         <h3 class="chart-title">Healthcare Resource Utilization</h3>
                         <div class="chart-period">Current</div>
                     </div>
-                    <canvas id="resourceChart" class="chart-canvas"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="resourceChart"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- Population Health Metrics -->
             <div class="chart-container single-chart" style="margin-bottom: 50px;">
                 <div class="chart-header">
                     <h3 class="chart-title">Population Health Impact Assessment</h3>
@@ -679,10 +687,11 @@
                         <option value="comorbidity">By Comorbidity</option>
                     </select>
                 </div>
-                <canvas id="populationChart" class="chart-canvas"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="populationChart"></canvas>
+                </div>
             </div>
 
-            <!-- Critical Alerts -->
             <div class="alerts-section">
                 <h2 class="section-title">🚨 Critical Health Alerts</h2>
                 <div class="alerts-grid">
@@ -736,7 +745,6 @@
                 </div>
             </div>
 
-            <!-- Regional Data Table -->
             <div class="data-table">
                 <div class="table-header">
                     <h2 class="section-title">Regional Health Surveillance Data</h2>
