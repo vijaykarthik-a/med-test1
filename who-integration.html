@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WHO Global Health Observatory - Integration Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #00ff88;
+            --secondary-color: #00d4ff;
+            --accent-color: #667eea;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --glass-bg: rgba(200, 200, 200, 0.05);
+            --glass-border: rgba(200, 200, 200, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,244 +27,502 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            color: white;
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--dark-bg);
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px 0;
-            position: sticky;
+        /* Navigation - matching homepage */
+        .navbar {
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .header-content {
-            max-width: 1200px;
+        .navbar.scrolled {
+            background: rgba(5, 5, 5, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 0 20px;
-        }
-
-        .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: space-between;
         }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, #00d4ff, #667eea);
-            border-radius: 12px;
+        .nav-logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.6));
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            background: var(--glass-bg);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0);
+            z-index: -1;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link:hover::before {
+            opacity: 0.15;
+            transform: scale(1);
+        }
+
+        .nav-link.active {
+            background: var(--glass-bg);
+            color: var(--primary-color);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Hero Section - adapted for WHO */
+        .hero-section {
+            height: 100vh;
+            background: radial-gradient(circle at 50% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                        var(--darker-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .back-button {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
-
-        .integration-header {
             text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .integration-title {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #00d4ff, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .integration-subtitle {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .status-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
             position: relative;
             overflow: hidden;
         }
 
-        .status-panel::before {
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 1000px;
+            padding: 0 40px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 10px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.2s;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.4s;
+            letter-spacing: -3px;
+            line-height: 0.9;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.3));
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.8s;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+        }
+
+        .hero-stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1s;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button.primary {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .cta-button.primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 255, 136, 0.5);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Features Section - WHO Data Widgets */
+        .features-section {
+            padding: 60px 0;
+            background: linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .section-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            height: 2px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .status-item {
-            text-align: center;
-        }
-
-        .status-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .status-online { color: #00ff88; }
-        .status-warning { color: #ffa726; }
-        .status-info { color: #00d4ff; }
-
-        .status-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .connection-controls {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .control-button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            min-width: 150px;
-        }
-
-        .primary-button {
-            background: linear-gradient(45deg, #00d4ff, #667eea);
-            color: white;
-        }
-
-        .primary-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
-        }
-
-        .secondary-button {
-            background: transparent;
-            border: 2px solid #00ff88;
-            color: #00ff88;
-        }
-
-        .secondary-button:hover {
-            background: rgba(0, 255, 136, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .data-widget {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .data-widget:hover {
+        .feature-card:hover {
             transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-color);
         }
 
-        .widget-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #00d4ff;
-            margin-bottom: 20px;
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-size: 16px;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
         .data-table th,
         .data-table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .data-table th {
-            color: #00ff88;
+            color: var(--primary-color);
             font-weight: 600;
+            font-size: 14px;
+        }
+
+        .data-table td {
+            font-size: 14px;
+        }
+
+        .chart-container {
+            height: 120px;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--secondary-color);
+            border-radius: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        .chart-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 4px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            animation: move 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes move {
+            0% { left: 0%; }
+            50% { left: 50%; }
+            100% { left: 90%; }
         }
 
         .loading-spinner {
             display: none;
-            width: 40px;
-            height: 40px;
-            margin: 20px auto;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid #00d4ff;
+            width: 30px;
+            height: 30px;
+            margin: 10px auto;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid var(--secondary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -268,7 +541,7 @@
             color: white;
             padding: 20px 25px;
             border-radius: 15px;
-            border-left: 4px solid #00ff88;
+            border-left: 4px solid var(--primary-color);
             z-index: 1000;
             transform: translateX(100%);
             transition: all 0.5s ease;
@@ -287,481 +560,354 @@
             border-left-color: #ffa726;
         }
 
-        .chart-container {
-            height: 200px;
-            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
-            border-radius: 15px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-placeholder {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            height: 2px;
-            background: #00d4ff;
-            border-radius: 1px;
-            animation: pulse 2s infinite;
-        }
-
-        .chart-placeholder::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            width: 4px;
-            height: 24px;
-            background: #00ff88;
-            border-radius: 2px;
-            animation: move 3s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes move {
-            0% { left: 0%; }
-            50% { left: 50%; }
-            100% { left: 90%; }
-        }
-
+        /* Mobile Navigation */
         @media (max-width: 768px) {
-            .header-content {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(5, 5, 5, 0.98);
+                backdrop-filter: blur(25px);
                 flex-direction: column;
+                gap: 0;
+                padding: 20px;
+                border-top: 1px solid var(--glass-border);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 15px 20px;
+                border-radius: 12px;
+                margin-bottom: 8px;
+                text-align: center;
+                background: var(--glass-bg);
+                border: 1px solid var(--glass-border);
+            }
+
+            .nav-container {
+                padding: 0 20px;
+            }
+
+            .nav-logo {
+                font-size: 24px;
+            }
+
+            .hero-content {
+                padding: 0 20px;
+            }
+
+            .hero-title {
+                font-size: 48px;
+                letter-spacing: -2px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .hero-badge {
+                font-size: 14px;
+            }
+
+            .hero-stat-number {
+                font-size: 36px;
+            }
+
+            .hero-stat-label {
+                font-size: 12px;
+            }
+
+            .cta-button {
+                font-size: 16px;
+                padding: 16px 32px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .section-subtitle {
+                font-size: 16px;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
-            .integration-title {
-                font-size: 2rem;
-            }
-            
-            .connection-controls {
+
+            .cta-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
-            .data-grid {
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .features-grid {
                 grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .feature-title {
+                font-size: 20px;
+            }
+
+            .feature-description {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">🌍</div>
-                <div class="logo-text">WHO Integration Portal</div>
-            </div>
-            <a href="#" class="back-button" onclick="goBack()">← Back to MEDIKIT</a>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">MEDIKIT</a>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+                <li><a href="who-integration.html" class="nav-link active">WHO Integration</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
         </div>
-    </header>
+    </nav>
 
-    <div class="container">
-        <div class="integration-header">
-            <h1 class="integration-title">WHO Global Health Observatory</h1>
-            <p class="integration-subtitle">Real-time access to global health surveillance data from 194 WHO member states. Monitor disease outbreaks, antimicrobial resistance patterns, and epidemiological intelligence.</p>
-        </div>
-
-        <div class="status-panel">
-            <div class="status-grid">
-                <div class="status-item">
-                    <div class="status-value status-online" id="connection-status">Connected</div>
-                    <div class="status-label">Connection Status</div>
+    <section class="hero-section">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">🌍 WHO Global Health Observatory</div>
+            <h1 class="hero-title">
+                <span class="highlight">WHO</span> Global<br>
+                Health Integration
+            </h1>
+            <p class="hero-subtitle">
+                Real-time access to global health surveillance data from 194 WHO member states. 
+                Monitor disease outbreaks, antimicrobial resistance patterns, and epidemiological intelligence.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number status-online" id="connection-status">Connected</div>
+                    <div class="hero-stat-label">Connection Status</div>
                 </div>
-                <div class="status-item">
-                    <div class="status-value status-info" id="data-sync">2 min ago</div>
-                    <div class="status-label">Last Sync</div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number status-info" id="data-sync">2 min ago</div>
+                    <div class="hero-stat-label">Last Sync</div>
                 </div>
-                <div class="status-item">
-                    <div class="status-value status-online" id="uptime">99.7%</div>
-                    <div class="status-label">API Uptime</div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number status-online" id="uptime">99.7%</div>
+                    <div class="hero-stat-label">API Uptime</div>
                 </div>
-                <div class="status-item">
-                    <div class="status-value status-warning" id="rate-limit">847/1000</div>
-                    <div class="status-label">API Calls Remaining</div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number status-warning" id="rate-limit">847/1000</div>
+                    <div class="hero-stat-label">API Calls Remaining</div>
                 </div>
             </div>
             
-            <div class="connection-controls">
-                <button class="control-button primary-button" onclick="syncData()" id="sync-btn">Sync Data Now</button>
-                <button class="control-button secondary-button" onclick="testConnection()" id="test-btn">Test Connection</button>
-                <button class="control-button secondary-button" onclick="resetConnection()" id="reset-btn">Reset Connection</button>
+            <div class="cta-buttons">
+                <button class="cta-button primary" onclick="syncData()" id="sync-btn">
+                    <span>Sync Data Now</span>
+                    <span>🔄</span>
+                </button>
+                <button class="cta-button secondary" onclick="testConnection()" id="test-btn">
+                    <span>Test Connection</span>
+                    <span>🔗</span>
+                </button>
             </div>
         </div>
+    </section>
 
-        <div class="data-grid">
-            <div class="data-widget">
-                <div class="widget-title">
-                    📊 Recent Outbreak Data
-                </div>
-                <div class="loading-spinner" id="outbreak-spinner"></div>
-                <table class="data-table" id="outbreak-table">
-                    <thead>
-                        <tr>
-                            <th>Country</th>
-                            <th>Disease</th>
-                            <th>Cases</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>India</td>
-                            <td>Dengue</td>
-                            <td>1,247</td>
-                            <td style="color: #ffa726;">High</td>
-                        </tr>
-                        <tr>
-                            <td>Brazil</td>
-                            <td>Zika</td>
-                            <td>89</td>
-                            <td style="color: #42a5f5;">Moderate</td>
-                        </tr>
-                        <tr>
-                            <td>Nigeria</td>
-                            <td>Meningitis</td>
-                            <td>456</td>
-                            <td style="color: #ff6b6b;">Critical</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">📊 Live Data Streams</div>
+                <h2 class="section-title">Global Health Intelligence</h2>
+                <p class="section-subtitle">
+                    Real-time surveillance data and analytics from WHO's global health monitoring network, 
+                    providing critical insights for outbreak detection and response.
+                </p>
             </div>
 
-            <div class="data-widget">
-                <div class="widget-title">
-                    🦠 AMR Surveillance Data
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🦠</div>
+                    <h3 class="feature-title">Recent Outbreak Data</h3>
+                    <p class="feature-description">
+                        Latest outbreak intelligence from WHO member states with real-time case updates and risk assessments.
+                    </p>
+                    <div class="loading-spinner" id="outbreak-spinner"></div>
+                    <table class="data-table" id="outbreak-table">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>Disease</th>
+                                <th>Cases</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>India</td>
+                                <td>Dengue</td>
+                                <td>1,247</td>
+                                <td style="color: #ffa726;">High</td>
+                            </tr>
+                            <tr>
+                                <td>Brazil</td>
+                                <td>Zika</td>
+                                <td>89</td>
+                                <td style="color: #42a5f5;">Moderate</td>
+                            </tr>
+                            <tr>
+                                <td>Nigeria</td>
+                                <td>Meningitis</td>
+                                <td>456</td>
+                                <td style="color: #ff6b6b;">Critical</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="loading-spinner" id="amr-spinner"></div>
-                <div class="chart-container">
-                    <div class="chart-placeholder"></div>
-                </div>
-                <table class="data-table" id="amr-table">
-                    <thead>
-                        <tr>
-                            <th>Pathogen</th>
-                            <th>Resistance Rate</th>
-                            <th>Trend</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>MRSA</td>
-                            <td>34.2%</td>
-                            <td style="color: #ff6b6b;">↑ 2.1%</td>
-                        </tr>
-                        <tr>
-                            <td>VRE</td>
-                            <td>18.7%</td>
-                            <td style="color: #00ff88;">↓ 0.8%</td>
-                        </tr>
-                        <tr>
-                            <td>CRE</td>
-                            <td>41.1%</td>
-                            <td style="color: #ffa726;">↑ 1.3%</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
 
-            <div class="data-widget">
-                <div class="widget-title">
-                    🌍 Geographic Distribution
-                </div>
-                <div class="loading-spinner" id="geo-spinner"></div>
-                <table class="data-table" id="geo-table">
-                    <thead>
-                        <tr>
-                            <th>Region</th>
-                            <th>Active Outbreaks</th>
-                            <th>Risk Level</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Southeast Asia</td>
-                            <td>47</td>
-                            <td style="color: #ff6b6b;">High</td>
-                        </tr>
-                        <tr>
-                            <td>Africa</td>
-                            <td>89</td>
-                            <td style="color: #ff6b6b;">Critical</td>
-                        </tr>
-                        <tr>
-                            <td>Americas</td>
-                            <td>23</td>
-                            <td style="color: #ffa726;">Moderate</td>
-                        </tr>
-                        <tr>
-                            <td>Europe</td>
-                            <td>12</td>
-                            <td style="color: #00ff88;">Low</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="data-widget">
-                <div class="widget-title">
-                    📈 Data Quality Metrics
-                </div>
-                <div class="loading-spinner" id="quality-spinner"></div>
-                <table class="data-table" id="quality-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Value</th>
-                            <th>Target</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Data Completeness</td>
-                            <td style="color: #00ff88;">98.7%</td>
-                            <td>95%</td>
-                        </tr>
-                        <tr>
-                            <td>Response Time</td>
-                            <td style="color: #00ff88;">1.2s</td>
-                            <td>&lt; 2s</td>
-                        </tr>
-                        <tr>
-                            <td>Error Rate</td>
-                            <td style="color: #00ff88;">0.03%</td>
-                            <td>&lt; 0.1%</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // WHO Integration Portal JavaScript
-        class WHOIntegration {
-            constructor() {
-                this.isConnected = true;
-                this.lastSync = new Date();
-                this.apiCallsRemaining = 847;
-                this.setupEventListeners();
-                this.startAutoSync();
-            }
-
-            setupEventListeners() {
-                // Update connection status periodically
-                setInterval(() => this.updateStatus(), 5000);
-                
-                // Simulate data updates
-                setInterval(() => this.updateData(), 15000);
-            }
-
-            syncData() {
-                const syncBtn = document.getElementById('sync-btn');
-                const originalText = syncBtn.textContent;
-                
-                // Show loading states
-                this.showLoadingSpinners(true);
-                syncBtn.textContent = 'Syncing...';
-                syncBtn.disabled = true;
-                
-                // Simulate API call delay
-                setTimeout(() => {
-                    this.performDataSync();
-                    this.showLoadingSpinners(false);
-                    syncBtn.textContent = originalText;
-                    syncBtn.disabled = false;
-                    this.showNotification('Data synchronized successfully', 'success');
-                }, 2000);
-            }
-
-            testConnection() {
-                const testBtn = document.getElementById('test-btn');
-                const originalText = testBtn.textContent;
-                
-                testBtn.textContent = 'Testing...';
-                testBtn.disabled = true;
-                
-                setTimeout(() => {
-                    const success = Math.random() > 0.1; // 90% success rate
-                    
-                    if (success) {
-                        this.showNotification('Connection test successful - WHO API is responding normally', 'success');
-                        document.getElementById('connection-status').textContent = 'Connected';
-                        document.getElementById('connection-status').className = 'status-value status-online';
-                    } else {
-                        this.showNotification('Connection test failed - Please check network settings', 'error');
-                        document.getElementById('connection-status').textContent = 'Error';
-                        document.getElementById('connection-status').className = 'status-value status-warning';
-                    }
-                    
-                    testBtn.textContent = originalText;
-                    testBtn.disabled = false;
-                }, 1500);
-            }
-
-            resetConnection() {
-                const resetBtn = document.getElementById('reset-btn');
-                const originalText = resetBtn.textContent;
-                
-                resetBtn.textContent = 'Resetting...';
-                resetBtn.disabled = true;
-                
-                setTimeout(() => {
-                    // Reset connection parameters
-                    this.apiCallsRemaining = 1000;
-                    document.getElementById('rate-limit').textContent = '1000/1000';
-                    document.getElementById('connection-status').textContent = 'Connected';
-                    document.getElementById('connection-status').className = 'status-value status-online';
-                    
-                    this.showNotification('Connection reset successfully - All parameters restored', 'success');
-                    resetBtn.textContent = originalText;
-                    resetBtn.disabled = false;
-                }, 1000);
-            }
-
-            showLoadingSpinners(show) {
-                const spinners = document.querySelectorAll('.loading-spinner');
-                spinners.forEach(spinner => {
-                    spinner.style.display = show ? 'block' : 'none';
-                });
-            }
-
-            performDataSync() {
-                // Simulate updating outbreak data
-                const outbreakTable = document.getElementById('outbreak-table').getElementsByTagName('tbody')[0];
-                const newCases = Math.floor(Math.random() * 100) + 1200;
-                outbreakTable.rows[0].cells[2].textContent = newCases.toLocaleString();
-                
-                // Update API calls remaining
-                this.apiCallsRemaining = Math.max(0, this.apiCallsRemaining - Math.floor(Math.random() * 10 + 1));
-                document.getElementById('rate-limit').textContent = `${this.apiCallsRemaining}/1000`;
-                
-                // Update last sync time
-                this.lastSync = new Date();
-                document.getElementById('data-sync').textContent = 'Just now';
-            }
-
-            updateStatus() {
-                // Update sync time display
-                const now = new Date();
-                const diffMinutes = Math.floor((now - this.lastSync) / 60000);
-                
-                if (diffMinutes === 0) {
-                    document.getElementById('data-sync').textContent = 'Just now';
-                } else if (diffMinutes < 60) {
-                    document.getElementById('data-sync').textContent = `${diffMinutes} min ago`;
-                } else {
-                    document.getElementById('data-sync').textContent = `${Math.floor(diffMinutes/60)}h ${diffMinutes%60}m ago`;
-                }
-
-                // Simulate occasional rate limit changes
-                if (Math.random() < 0.1) {
-                    this.apiCallsRemaining = Math.max(0, this.apiCallsRemaining - 1);
-                    document.getElementById('rate-limit').textContent = `${this.apiCallsRemaining}/1000`;
-                }
-            }
-
-            updateData() {
-                // Simulate real-time data updates
-                const tables = document.querySelectorAll('.data-table tbody');
-                
-                // Randomly update some values
-                if (Math.random() < 0.3) {
-                    // Update AMR resistance rate
-                    const amrTable = document.getElementById('amr-table').getElementsByTagName('tbody')[0];
-                    const newRate = (Math.random() * 5 + 30).toFixed(1) + '%';
-                    amrTable.rows[0].cells[1].textContent = newRate;
-                }
-            }
-
-            startAutoSync() {
-                // Auto-sync every 5 minutes
-                setInterval(() => {
-                    if (this.isConnected) {
-                        this.performDataSync();
-                        this.showNotification('Auto-sync completed', 'success');
-                    }
-                }, 300000); // 5 minutes
-            }
-
-            showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                
-                const icons = {
-                    'success': '✅',
-                    'error': '❌',
-                    'warning': '⚠️',
-                    'info': 'ℹ️'
-                };
-                
-                notification.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">${icons[type]}</span>
-                        <div>
-                            <strong>${message}</strong>
-                            <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">
-                                ${new Date().toLocaleTimeString()}
-                            </div>
-                        </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧬</div>
+                    <h3 class="feature-title">AMR Surveillance Data</h3>
+                    <p class="feature-description">
+                        Antimicrobial resistance tracking with predictive modeling and resistance pattern analysis.
+                    </p>
+                    <div class="loading-spinner" id="amr-spinner"></div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder"></div>
                     </div>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Show notification
-                setTimeout(() => notification.classList.add('show'), 100);
-                
-                // Hide notification
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                    setTimeout(() => notification.remove(), 500);
-                }, 4000);
-            }
-        }
+                    <table class="data-table" id="amr-table">
+                        <thead>
+                            <tr>
+                                <th>Pathogen</th>
+                                <th>Resistance Rate</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MRSA</td>
+                                <td>34.2%</td>
+                                <td style="color: #ff6b6b;">↑ 2.1%</td>
+                            </tr>
+                            <tr>
+                                <td>VRE</td>
+                                <td>18.7%</td>
+                                <td style="color: #00ff88;">↓ 0.8%</td>
+                            </tr>
+                            <tr>
+                                <td>CRE</td>
+                                <td>41.1%</td>
+                                <td style="color: #ffa726;">↑ 1.3%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-        // Initialize WHO Integration
-        const whoIntegration = new WHOIntegration();
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3 class="feature-title">Geographic Distribution</h3>
+                    <p class="feature-description">
+                        Regional outbreak distribution and risk level assessment across WHO regions worldwide.
+                    </p>
+                    <div class="loading-spinner" id="geo-spinner"></div>
+                    <table class="data-table" id="geo-table">
+                        <thead>
+                            <tr>
+                                <th>Region</th>
+                                <th>Active Outbreaks</th>
+                                <th>Risk Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Southeast Asia</td>
+                                <td>47</td>
+                                <td style="color: #ff6b6b;">High</td>
+                            </tr>
+                            <tr>
+                                <td>Africa</td>
+                                <td>89</td>
+                                <td style="color: #ff6b6b;">Critical</td>
+                            </tr>
+                            <tr>
+                                <td>Americas</td>
+                                <td>23</td>
+                                <td style="color: #ffa726;">Moderate</td>
+                            </tr>
+                            <tr>
+                                <td>Europe</td>
+                                <td>12</td>
+                                <td style="color: #00ff88;">Low</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-        // Navigation functions
-        function goBack() {
-            window.history.back();
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                whoIntegration.syncData();
-            }
-            if (e.ctrlKey && e.key === 't') {
-                e.preventDefault();
-                whoIntegration.testConnection();
-            }
-        });
-
-        // Page load animations
-        document.addEventListener('DOMContentLoaded', () => {
-            // Animate widgets on load
-            const widgets = document.querySelectorAll('.data-widget');
-            widgets.forEach((widget, index) => {
-                setTimeout(() => {
-                    widget.style.opacity = '0';
-                    widget.style.transform = 'translateY(50px)';
-                    widget.style.transition = 'all 0.6s ease';
-                    
-                    setTimeout(() => {
-                        widget.style.opacity = '1';
-                        widget.style.transform = 'translateY(0)';
-                    }, 100);
-                }, index * 200);
-            });
-        });
-    </script>
-</body>
-</html>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">Data Quality Metrics</h3>
+                    <p class="feature-description">
+                        System performance indicators and data quality assessments for reliable health intelligence.
+                    </p>
+                    <div class="loading-spinner" id="quality-spinner"></div>
+                    <table class="data-table" id="quality-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                                <th>Target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data Completeness</td>
+                                <td style="color: #00ff88;">98.7%</td>
+                                <td>95%</td>
+                            </tr>
+                            <tr>
+                                <td>Response Time</td>
+                                <td style="color: #00ff88;">1.2s</td>
+                                <td>&lt; 2s</td>
+                            </tr>
