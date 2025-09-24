@@ -20,7 +20,6 @@
             font-family: 'Inter', sans-serif; background-color: #0a0a0a;
         }
         
-        /* --- 1. CSS FOR THE NEW HEADER --- */
         .page-header {
             padding: 10px 40px;
             background: rgba(10, 10, 10, 0.8);
@@ -41,7 +40,6 @@
             line-height: 40px; /* Aligns text vertically */
         }
         
-        /* --- 2. ADJUSTED MAP HEIGHT --- */
         #map {
             width: 100%;
             /* Map height is now the full screen height MINUS the header's height */
@@ -76,19 +74,69 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // MOCK AMR DATA
+        // --- YOUR NEW, EXPANDED AMR DATA ---
         const amrData = {
-            "NGA": { name: "Nigeria", rate: 72 }, "ZAF": { name: "South Africa", rate: 68 },
-            "IND": { name: "India", rate: 61 }, "RUS": { name: "Russia", rate: 54 },
-            "CHN": { name: "China", rate: 48 }, "BRA": { name: "Brazil", rate: 45 },
-            "ARG": { name: "Argentina", rate: 38 }, "ESP": { name: "Spain", rate: 35 },
-            "USA": { name: "United States", rate: 25 }, "DEU": { name: "Germany", rate: 22 },
-            "AUS": { name: "Australia", rate: 18 }, "CAN": { name: "Canada", rate: 15 },
+            // Very High AMR (Dark Red - 60%+)
+            "NGA": { name: "Nigeria", rate: 78 }, "PAK": { name: "Pakistan", rate: 75 },
+            "BGD": { name: "Bangladesh", rate: 72 }, "AFG": { name: "Afghanistan", rate: 70 },
+            "MMR": { name: "Myanmar", rate: 68 }, "SOM": { name: "Somalia", rate: 67 },
+            "TCD": { name: "Chad", rate: 65 }, "CAF": { name: "Central African Republic", rate: 63 },
+            "ZAF": { name: "South Africa", rate: 62 }, "IND": { name: "India", rate: 61 },
+            
+            // High AMR (Red - 50-60%)
+            "RUS": { name: "Russia", rate: 58 }, "IDN": { name: "Indonesia", rate: 56 },
+            "IRN": { name: "Iran", rate: 55 }, "TUR": { name: "Turkey", rate: 54 },
+            "EGY": { name: "Egypt", rate: 53 }, "MAR": { name: "Morocco", rate: 52 },
+            "KEN": { name: "Kenya", rate: 51 }, "ETH": { name: "Ethiopia", rate: 50 },
+            
+            // Moderate-High AMR (Orange-Red - 40-50%)
+            "CHN": { name: "China", rate: 48 }, "BRA": { name: "Brazil", rate: 47 },
+            "MEX": { name: "Mexico", rate: 46 }, "THA": { name: "Thailand", rate: 45 },
+            "VNM": { name: "Vietnam", rate: 44 }, "PHL": { name: "Philippines", rate: 43 },
+            "COL": { name: "Colombia", rate: 42 }, "PER": { name: "Peru", rate: 41 },
+            "UKR": { name: "Ukraine", rate: 40 },
+            
+            // Moderate AMR (Orange - 30-40%)
+            "ARG": { name: "Argentina", rate: 38 }, "CHL": { name: "Chile", rate: 37 },
+            "GRC": { name: "Greece", rate: 36 }, "ESP": { name: "Spain", rate: 35 },
+            "ITA": { name: "Italy", rate: 34 }, "ROU": { name: "Romania", rate: 33 },
+            "BGR": { name: "Bulgaria", rate: 32 }, "HUN": { name: "Hungary", rate: 31 },
+            "POL": { name: "Poland", rate: 30 },
+            
+            // Low-Moderate AMR (Light Orange - 20-30%)
+            "USA": { name: "United States", rate: 28 }, "JPN": { name: "Japan", rate: 27 },
+            "KOR": { name: "South Korea", rate: 26 }, "FRA": { name: "France", rate: 25 },
+            "GBR": { name: "United Kingdom", rate: 24 }, "DEU": { name: "Germany", rate: 23 },
+            "BEL": { name: "Belgium", rate: 22 }, "NLD": { name: "Netherlands", rate: 21 },
+            "AUT": { name: "Austria", rate: 20 },
+            
+            // Low AMR (Yellow - 10-20%)
+            "AUS": { name: "Australia", rate: 18 }, "CAN": { name: "Canada", rate: 17 },
+            "CHE": { name: "Switzerland", rate: 16 }, "SWE": { name: "Sweden", rate: 15 },
+            "NOR": { name: "Norway", rate: 14 }, "DNK": { name: "Denmark", rate: 13 },
+            "FIN": { name: "Finland", rate: 12 }, "ISL": { name: "Iceland", rate: 10 },
+            
+            // Very Low AMR (Light Yellow - <10%)
+            "NZL": { name: "New Zealand", rate: 8 }, "SGP": { name: "Singapore", rate: 6 },
+            "LUX": { name: "Luxembourg", rate: 5 }
         };
+        // ------------------------------------
 
         // Define color scale and map styles
-        function getColor(rate) { return rate > 60 ? '#800026' : rate > 50 ? '#BD0026' : rate > 40 ? '#E31A1C' : rate > 30 ? '#FC4E2A' : rate > 20 ? '#FD8D3C' : rate > 10 ? '#FEB24C' : '#FFEDA0'; }
-        function style(feature) { const countryData = amrData[feature.properties.ISO_A3]; return { fillColor: countryData ? getColor(countryData.rate) : '#dddddd', weight: 1, opacity: 1, color: 'white', dashArray: '3', fillOpacity: 0.7 }; }
+        function getColor(rate) { 
+            return rate > 60 ? '#800026' : rate > 50 ? '#BD0026' :
+                   rate > 40 ? '#E31A1C' : rate > 30 ? '#FC4E2A' :
+                   rate > 20 ? '#FD8D3C' : rate > 10 ? '#FEB24C' : '#FFEDA0';
+        }
+        
+        function style(feature) { 
+            const countryData = amrData[feature.properties.ISO_A3]; 
+            return { 
+                fillColor: countryData ? getColor(countryData.rate) : '#dddddd', 
+                weight: 1, opacity: 1, color: 'white', 
+                dashArray: '3', fillOpacity: 0.7 
+            }; 
+        }
 
         // Add interactivity
         var geojson;
@@ -98,15 +146,29 @@
         
         // Fetch GeoJSON and add to map
         const geoJsonUrl = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
-        fetch(geoJsonUrl).then(res => res.json()).then(data => { geojson = L.geoJSON(data, { style: style, onEachFeature: onEachFeature }).addTo(map); });
+        fetch(geoJsonUrl)
+            .then(res => res.json())
+            .then(data => { 
+                geojson = L.geoJSON(data, { 
+                    style: style, 
+                    onEachFeature: onEachFeature 
+                }).addTo(map); 
+            });
 
         // Add a legend
         var legend = L.control({position: 'bottomright'});
-        legend.onAdd = function (map) { var div = L.DomUtil.create('div', 'info legend'), grades = [10, 20, 30, 40, 50, 60]; div.innerHTML += '<h4>AMR Rate (%)</h4>'; for (var i = 0; i < grades.length; i++) { div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+'); } return div; };
+        legend.onAdd = function (map) { 
+            var div = L.DomUtil.create('div', 'info legend'), 
+            grades = [0, 10, 20, 30, 40, 50, 60]; 
+            
+            div.innerHTML += '<h4>AMR Rate (%)</h4>'; 
+            for (var i = 0; i < grades.length; i++) { 
+                div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + 
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+'); 
+            } 
+            return div; 
+        };
         legend.addTo(map);
-
-        // 4. REMOVED the old home button (the emoji)
-        // The header now handles the link back to home.
 
     </script>
 </body>
